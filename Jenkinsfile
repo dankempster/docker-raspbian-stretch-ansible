@@ -21,19 +21,16 @@ pipeline {
       }
     }
     
-    // stage('Publish') {
-    //   when {
-    //     branch 'master'
-    //   }
+    stage('Publish') {
+      when {
+        branch 'master'
+      }
     
-    //   steps {
-    //     withDockerRegistry([
-    //       credentialsId: "com.docker.hub.dankempster",
-    //       url: ""
-    //     ]) {
-    //       sh 'docker push dankempster/raspbian-stretch-ansible:latest'
-    //     }
-    //   }
-    // }
+      steps {
+        withDockerRegistry([credentialsId: "com.docker.hub.dankempster", url: ""]) {
+          sh 'docker push dankempster/raspbian-stretch-ansible:latest'
+        }
+      }
+    }
   }
 }
