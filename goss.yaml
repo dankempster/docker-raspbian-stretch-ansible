@@ -1,3 +1,15 @@
 package:
-  ansible:
+  build-essential:
+    installed: true
+  libffi-dev:
+    installed: true
+  libssl-dev:
+    installed: true
+  python-pip:
+    installed: true
+  python-dev:
+    installed: true
+  python-setuptools:
+    installed: true
+  python-wheel:
     installed: true
