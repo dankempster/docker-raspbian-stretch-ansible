@@ -92,10 +92,8 @@ pipeline {
         
         sh "docker exec --tty ${CONTAINER_ID} env TERM=xterm ansible --version"
 
-        sh """
-          docker stop ${CONTAINER_ID}
-          docker rm ${CONTAINER_ID}
-        """
+        sh "docker stop ${CONTAINER_ID}"
+        sh "docker rm ${CONTAINER_ID}"
       }
     }
     
