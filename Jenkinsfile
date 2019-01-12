@@ -56,6 +56,7 @@ pipeline {
     stage('Tests') {
       steps {
         sh '[ -d bin ] || mkdir bin'
+        sh '[ -d build/reports ] || mkdir -p build/reports'
 
         // See https://github.com/aelsabbahy/goss/releases for release versions
         sh "curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_RELEASE}/goss-linux-arm -o ./bin/goss"
