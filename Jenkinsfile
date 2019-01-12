@@ -36,6 +36,23 @@ pipeline {
       }
     }
 
+    stage('Run') {
+      steps {
+        
+        script {
+          // Run the tests  
+          CONTAINER_ID = sh(
+            script: "docker run --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro ${IMAGE_NAME}:${IMAGE_TAG}",
+            returnStdout: true
+          ).trim()
+        }
+        
+        sh "docker logs ${CONTAINER_ID}"
+        sh "docker stop ${CONTAINER_ID}"
+        sh "docker rm ${CONTAINER_ID}"
+      }
+    }
+
     stage('Tests') {
       steps {
         sh '[ -d bin ] || mkdir bin'
