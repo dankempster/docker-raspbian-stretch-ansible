@@ -1,0 +1,20 @@
+file:
+  /etc/ansible/hosts:
+    exists: true
+    filetype: file
+    contains: ["localhost ansible_connection=local"]
+package:
+  build-essential:
+    installed: true
+  libffi-dev:
+    installed: true
+  libssl-dev:
+    installed: true
+  python-pip:
+    installed: true
+  python-dev:
+    installed: true
+  python-setuptools:
+    installed: true
+  python-wheel:
+    installed: true
