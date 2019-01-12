@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
 
+def GOSS_RELEASE = "v0.3.6"
 def IMAGE_NAME = "dankempster/raspbian-stretch-ansible"
 def IMAGE_TAG = "build"
 
@@ -32,6 +33,33 @@ pipeline {
         
         // Build the image
         sh "docker build -f Dockerfile -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+      }
+    }
+
+    stage('Tests') {
+      steps {
+        sh '[ -d bin ] || mkdir bin'
+
+        // See https://github.com/aelsabbahy/goss/releases for release versions
+        sh "curl -L https://github.com/aelsabbahy/goss/releases/download/${GOSS_RELEASE}/goss-linux-arm -o ./bin/goss"
+
+        // dgoss docker wrapper (use 'master' for latest version)
+        sh "curl -L https://raw.githubusercontent.com/aelsabbahy/goss/${GOSS_RELEASE}/extras/dgoss/dgoss -o ./bin/dgoss"
+        
+        sh "chmod +rx ./bin/{goss,dgoss}"
+
+        // Run the tests  
+        sh """
+          export GOSS_PATH=\$(pwd)/bin/goss
+          export GOSS_OPTS="--format junit"
+
+          ./bin/dgoss run --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro ${IMAGE_NAME}:${IMAGE_TAG} | \\grep '<' > build/reports/goss-junit.xml
+        """
+      }
+      post {
+        always {
+          junit 'build/reports/**/*.xml'
+        }
       }
     }
 
